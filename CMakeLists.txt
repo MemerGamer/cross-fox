@@ -3,4 +3,4 @@ project(cross_fox C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(cross_fox project_root/main.c fox/src/helpers/utils.c fox/headers/helpers/utils.h fox/headers/helpers/constants.h)
+add_executable(cross_fox root/main.c fox/src/helpers/utils.c fox/headers/helpers/utils.h fox/headers/helpers/constants.h)
