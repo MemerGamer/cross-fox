@@ -1,2 +1,2 @@
 # cross-fox
- Cross platform C framework for easily API making
+ Cross platform C framework for easy API making.
