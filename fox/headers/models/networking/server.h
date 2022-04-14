@@ -24,7 +24,7 @@ typedef struct{
     void (*launch)(void);
 }FoxServer;
 
-struct FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,void(*launch)(void));
+FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,void(*launch)(void));
 
 
 #endif //CROSS_FOX_SERVER_H
