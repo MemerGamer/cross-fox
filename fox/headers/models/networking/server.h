@@ -7,9 +7,9 @@
 
 #include <WinSock2.h>
 
-//for Unix systems
-//#include <sys/socket.h>
-//#include <netinet/in.h>
+//for Unix systems:
+//  #include <sys/socket.h>
+//  #include <netinet/in.h>
 
 typedef struct{
     int domain;
@@ -26,6 +26,7 @@ typedef struct{
     void (*launch)(void);
 }FoxServer;
 
+//this is the declaration of the constructor
 FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,void(*launch)(void));
 
 

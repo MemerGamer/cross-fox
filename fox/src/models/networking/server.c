@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//this is the implementation of the constructor, this function initializes the constructor with input data
 FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,
                                         void (*launch)(void)) {
     FoxServer server;
@@ -22,6 +23,7 @@ FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _
 
     server.socket = socket(domain,service,protocol);
 
+    //check if the socket is open
     if(server.socket == 0){
         perror("Failed to connect socket...\n");
         exit(1);
