@@ -11,7 +11,7 @@
 //  #include <sys/socket.h>
 //  #include <netinet/in.h>
 
-typedef struct{
+struct FoxServer{
     int domain;
     int service;
     int protocol;
@@ -23,11 +23,11 @@ typedef struct{
 
     int socket;
 
-    void (*launch)(void);
-}FoxServer;
+    void (*fox_launch)(struct FoxServer *server);
+};
 
 //this is the declaration of the constructor
-FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,void(*launch)(void));
+struct FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,void(*fox_launch)(struct FoxServer *server));
 
 
 #endif //CROSS_FOX_SERVER_H

@@ -7,9 +7,9 @@
 #include <stdlib.h>
 
 //this is the implementation of the constructor, this function initializes the constructor with input data
-FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,
-                                        void (*launch)(void)) {
-    FoxServer server;
+struct FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,
+                                        void (*fox_launch)(struct FoxServer *server)) {
+    struct FoxServer server;
     server.domain = domain;
     server.service = service;
     server.protocol = protocol;
@@ -39,7 +39,7 @@ FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _
         exit(1);
     }
 
-    server.launch = launch;
+    server.fox_launch = fox_launch;
 
     return server;
 }
