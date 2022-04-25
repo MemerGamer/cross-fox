@@ -6,6 +6,7 @@
 #define CROSS_FOX_SERVER_H
 
 #include <WinSock2.h>
+#pragma comment(lib, "Ws2_32.lib")
 
 //for Unix systems:
 //  #include <sys/socket.h>
@@ -21,7 +22,6 @@ struct FoxServer{
 
     struct sockaddr_in address;
 
-    int socket;
 
     void (*fox_launch)(struct FoxServer *server);
 };
