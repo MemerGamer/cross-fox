@@ -22,6 +22,7 @@ struct FoxServer{
 
     struct sockaddr_in address;
 
+    unsigned int socket;
 
     void (*fox_launch)(struct FoxServer *server);
 };
