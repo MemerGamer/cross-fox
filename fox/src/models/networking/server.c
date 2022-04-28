@@ -7,39 +7,38 @@
 #include <stdlib.h>
 
 //this is the implementation of the constructor, this function initializes the constructor with input data
-struct FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, int port, int backlog,
+struct FoxServer fox_server_constructor(int domain, int service, int protocol, u_long _interface, char* port, int backlog,
                                         void (*fox_launch)(struct FoxServer *server)) {
+    #ifdef _WIN32
+        WSADATA wsa_data;
+        WSAStartup(MAKEWORD(1,1), &wsa_data);
+    #endif
+
     struct FoxServer server;
-    server.domain = domain;
-    server.service = service;
-    server.protocol = protocol;
-    server._interface = _interface;
-    server.port = port;
-    server.backlog = backlog;
 
-    server.address.sin_family = domain;
-    server.address.sin_port = htons(port);
-    server.address.sin_addr.s_addr = htonl(_interface);
+    struct addrinfo *result = NULL, hints;
+    ZeroMemory(&hints, sizeof (hints));
+    server.domain = hints.ai_family = domain;
+    server.service = hints.ai_socktype = service;
+    server.protocol = hints.ai_protocol = protocol;
+    hints.ai_flags = AI_PASSIVE;
 
-    server.socket = socket(domain,service,protocol);
-
-    //check if the socket is open
-    if(server.socket == 0){
-        perror("Failed to connect socket...\n");
-        exit(1);
+    // Resolve the local address and port to be used by the server
+    int iResult = getaddrinfo(NULL, port, &hints, &result);
+    if (iResult != 0) {
+        printf("getaddrinfo failed: %d\n", iResult);
+        WSACleanup();
     }
 
-    if(bind(server.socket, (struct sockaddr*)&server.address,sizeof(server.address)) < 0){
-        perror("Failed to bind socket...\n");
-        exit(1);
+    server.socket = INVALID_SOCKET;
+    server.socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    if (server.socket == INVALID_SOCKET) {
+        printf("Error at socket(): %d\n", WSAGetLastError());
+        freeaddrinfo(result);
+        WSACleanup();
     }
 
-    if(listen(server.socket,server.backlog) < 0){
-        perror("Failed to start listening...\n");
-        exit(1);
-    }
-
-    server.fox_launch = fox_launch;
+    printf("Created server.\n");
 
     return server;
 }
