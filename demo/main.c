@@ -48,38 +48,6 @@ void  INThandler(int sig){
 }
 
 int main() {
-//    printf("Hello, Cross-Fox App\n");
-//
-//    struct FoxServer server = fox_server_constructor(AF_INET,SOCK_STREAM, IPPROTO_TCP ,INADDR_ANY, "8080", 10, fox_launch);
-////    server.fox_launch(&server);
-//    char buffer[30000];
-//    char *hello = "HTTP/1.1 200 OK\nGMT\nServer: Apache/2.2.14 (Win32)\nLast-Modified: Wed, 22 Jul 2009 19:15:56 GMT\nContent-Type: text/html\nConnection: Closed\n\n<html><body><h1>Hello, Fox</h1></body></html>";
-//
-//    struct addrinfo *result = NULL, hints;
-//    ZeroMemory(&hints, sizeof (hints));
-//    hints.ai_family = server.domain;
-//    hints.ai_socktype = server.service;
-//    hints.ai_protocol = server.protocol;
-//    hints.ai_flags = AI_PASSIVE;
-//
-//    int iResult = getaddrinfo(NULL, server.port, &hints, &result);
-//    if (iResult != 0) {
-//        printf("getaddrinfo failed: %d\n", iResult);
-//        WSACleanup();
-//    }
-//
-//    while(1){
-//        printf("====== Waiting for connection ======");
-//        recv(new_socket,buffer,30000,0);
-//        printf("%s\n",buffer);
-//        send(new_socket, hello, (int)strlen(hello), 0 );
-//        closesocket(new_socket);
-//    }
-
-
-
-
-//----------------------
     // Initialize Winsock.
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -144,6 +112,7 @@ int main() {
             char buffer[30001];
             recv(AcceptSocket,buffer,30000,0);
             char hello[3000];
+            //todo: response struct - strings
             sprintf(hello,"HTTP/1.1 200 OK GMT\nServer: Apache/2.2.14 (Win32)\nLast-Modified: Wed, 22 Jul 2009 19:15:56 GMT\nContent-Type: text/html\nConnection: Closed\n\n<html><body><h1>Hello, Fox %i!</h1></body></html>", numberOfConnections++);
             printf("\nSending:\n%s\n", hello);
             send(AcceptSocket, hello, (int)strlen(hello), 0 );
