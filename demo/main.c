@@ -85,6 +85,7 @@ int fox_launch_new(){
     int numberOfConnections = 1;
 
     signal(SIGINT, INThandler);
+    html_response FoxResponse;
     while(1){
         //----------------------
         // Create a SOCKET for accepting incoming requests.
@@ -104,28 +105,41 @@ int fox_launch_new(){
             char buffer[30001];
             recv(AcceptSocket,buffer,30000,0);
             char hello[3000];
-            //todo: response struct - strings
-            html_response FoxResponse;
-            FoxResponse.full_response="";
-            FoxResponse.version = "HTTP/1.1 200 OK GMT\n";
-            FoxResponse.server_type = "Server: Apache/2.2.14 (Win32)\n";
-            FoxResponse.date = "Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\n";
-            FoxResponse.content_type = "Content-Type: text/html\n";
-            FoxResponse.connection_type = "Connection: Closed\n";
-            FoxResponse.content = "\n<html><body><h1>Hello, Fox %i!</h1></body></html>";
-            strcat(FoxResponse.full_response,FoxResponse.version);
-            strcat(FoxResponse.full_response,FoxResponse.server_type);
-            strcat(FoxResponse.full_response,FoxResponse.date);
-            strcat(FoxResponse.full_response,FoxResponse.content_type);
-            strcat(FoxResponse.full_response,FoxResponse.connection_type);
-            strcat(FoxResponse.full_response,FoxResponse.content);
+            char* full_response="";
 
+            //setting up data about version
+            FoxResponse.version = (char*) calloc(strlen("HTTP/1.1 200 OK GMT\n"),sizeof(char));
+            memcpy(FoxResponse.version, "HTTP/1.1 200 OK GMT\n", strlen("HTTP/1.1 200 OK GMT\n") + 1);
+            //setting up data about server type
+            FoxResponse.server_type = (char*) calloc(strlen("Server: Apache/2.2.14 (Win32)\n"),sizeof(char));
+            memcpy(FoxResponse.server_type, "Server: Apache/2.2.14 (Win32)\n", strlen("Server: Apache/2.2.14 (Win32)\n") + 1);
+            //setting up data about date
+            FoxResponse.date= (char*) calloc(strlen("Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\n"),sizeof(char));
+            memcpy(FoxResponse.date, "Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\n", strlen("Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\n") + 1);
+            //setting up data about content type
+            FoxResponse.content_type = (char*) calloc(strlen("Content-Type: text/html\n"),sizeof(char));
+            memcpy(FoxResponse.content_type, "Content-Type: text/html\n", strlen("Content-Type: text/html\n") + 1);
+            //setting up data about connection type
+            FoxResponse.connection_type = (char*) calloc(strlen("Connection: Closed\n"),sizeof(char));
+            memcpy(FoxResponse.connection_type, "Connection: Closed\n", strlen("Connection: Closed\n") + 1);
+            //setting up data about content
+            FoxResponse.content = (char*) calloc(strlen("\n<html><body><h1>Hello, Fox %i!</h1></body></html>"),sizeof(char));
+            memcpy(FoxResponse.content, "\n<html><body><h1>Hello, Fox %i!</h1></body></html>", strlen("\n<html><body><h1>Hello, Fox %i!</h1></body></html>") + 1);
+
+            //creating full response string
+            strcat(full_response,FoxResponse.version);
+            strcat(full_response,FoxResponse.server_type);
+            strcat(full_response,FoxResponse.date);
+            strcat(full_response,FoxResponse.content_type);
+            strcat(full_response,FoxResponse.connection_type);
+            strcat(full_response,FoxResponse.content);
+            FoxResponse.full_response = (char*) calloc(strlen(full_response),sizeof(char));
+            memcpy(FoxResponse.full_response, full_response, strlen(full_response) + 1);
             //sprintf(hello,"HTTP/1.1 200 OK GMT\nServer: Apache/2.2.14 (Win32)\nLast-Modified: Wed, 22 Jul 2009 19:15:56 GMT\nContent-Type: text/html\nConnection: Closed\n\n<html><body><h1>Hello, Fox %i!</h1></body></html>", numberOfConnections++);
             sprintf(hello,FoxResponse.full_response, numberOfConnections++);
             printf("\nSending:\n%s\n", hello);
             send(AcceptSocket, hello, (int)strlen(hello), 0 );
         }
-
         closesocket(AcceptSocket);
     }
 }
