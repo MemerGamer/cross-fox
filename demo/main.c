@@ -13,24 +13,6 @@
 // fox_add_endpoint("/app/get/", FOX_GET, &myFunc);
 // fox_start_server(settings);
 
-void fox_launch(struct FoxServer *server){
-
-    char buffer[30000];
-    char *hello = "HTTP/1.1 200 OK\nGMT\nServer: Apache/2.2.14 (Win32)\nLast-Modified: Wed, 22 Jul 2009 19:15:56 GMT\nContent-Type: text/html\nConnection: Closed\n\n<html><body><h1>Hello, Fox</h1></body></html>";
-
-    int address_length = sizeof(server->address);
-    unsigned int new_socket = accept(server->socket, (struct  sockaddr*)&server->address, (int*)&address_length);
-
-    while(1){
-        printf("====== Waiting for connection ======");
-        recv(new_socket,buffer,30000,0);
-        printf("%s\n",buffer);
-        send(new_socket, hello, (int)strlen(hello), 0 );
-        closesocket(new_socket);
-    }
-
-}
-
 void  INThandler(int sig){
     char  c;
 
@@ -47,7 +29,7 @@ void  INThandler(int sig){
     getchar(); // Get new line character
 }
 
-int main() {
+int fox_launch_new(){
     // Initialize Winsock.
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -120,4 +102,9 @@ int main() {
 
         closesocket(AcceptSocket);
     }
+}
+
+
+int main() {
+    fox_launch_new();
 }
