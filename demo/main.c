@@ -105,7 +105,6 @@ int fox_launch_new(){
             char buffer[30001];
             recv(AcceptSocket,buffer,30000,0);
             char hello[3000];
-            char* full_response="";
 
             //setting up data about version
             FoxResponse.version = (char*) calloc(strlen("HTTP/1.1 200 OK GMT\n"),sizeof(char));
@@ -126,15 +125,19 @@ int fox_launch_new(){
             FoxResponse.content = (char*) calloc(strlen("\n<html><body><h1>Hello, Fox %i!</h1></body></html>"),sizeof(char));
             memcpy(FoxResponse.content, "\n<html><body><h1>Hello, Fox %i!</h1></body></html>", strlen("\n<html><body><h1>Hello, Fox %i!</h1></body></html>") + 1);
 
+            FoxResponse.full_response = (char*)calloc((
+                    strlen(FoxResponse.version) + strlen(FoxResponse.server_type)+
+                    strlen(FoxResponse.date) + strlen(FoxResponse.content_type) +
+                    strlen(FoxResponse.connection_type) +
+                    strlen(FoxResponse.content) + 1
+                    ),sizeof(char));
             //creating full response string
-            strcat(full_response,FoxResponse.version);
-            strcat(full_response,FoxResponse.server_type);
-            strcat(full_response,FoxResponse.date);
-            strcat(full_response,FoxResponse.content_type);
-            strcat(full_response,FoxResponse.connection_type);
-            strcat(full_response,FoxResponse.content);
-            FoxResponse.full_response = (char*) calloc(strlen(full_response),sizeof(char));
-            memcpy(FoxResponse.full_response, full_response, strlen(full_response) + 1);
+            strcat(FoxResponse.full_response,FoxResponse.version);
+            strcat(FoxResponse.full_response,FoxResponse.server_type);
+            strcat(FoxResponse.full_response,FoxResponse.date);
+            strcat(FoxResponse.full_response,FoxResponse.content_type);
+            strcat(FoxResponse.full_response,FoxResponse.connection_type);
+            strcat(FoxResponse.full_response,FoxResponse.content);
             //sprintf(hello,"HTTP/1.1 200 OK GMT\nServer: Apache/2.2.14 (Win32)\nLast-Modified: Wed, 22 Jul 2009 19:15:56 GMT\nContent-Type: text/html\nConnection: Closed\n\n<html><body><h1>Hello, Fox %i!</h1></body></html>", numberOfConnections++);
             sprintf(hello,FoxResponse.full_response, numberOfConnections++);
             printf("\nSending:\n%s\n", hello);
