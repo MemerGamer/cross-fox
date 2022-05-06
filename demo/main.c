@@ -13,6 +13,16 @@
 // fox_add_endpoint("/app/get/", FOX_GET, &myFunc);
 // fox_start_server(settings);
 
+typedef struct html_response{
+    char* version;
+    char* server_type;
+    char* date;
+    char* content_type;
+    char* connection_type;
+    char* content;
+    char* full_response;
+}html_response;
+
 void  INThandler(int sig){
     char  c;
 
@@ -95,7 +105,23 @@ int fox_launch_new(){
             recv(AcceptSocket,buffer,30000,0);
             char hello[3000];
             //todo: response struct - strings
-            sprintf(hello,"HTTP/1.1 200 OK GMT\nServer: Apache/2.2.14 (Win32)\nLast-Modified: Wed, 22 Jul 2009 19:15:56 GMT\nContent-Type: text/html\nConnection: Closed\n\n<html><body><h1>Hello, Fox %i!</h1></body></html>", numberOfConnections++);
+            html_response FoxResponse;
+            FoxResponse.full_response="";
+            FoxResponse.version = "HTTP/1.1 200 OK GMT\n";
+            FoxResponse.server_type = "Server: Apache/2.2.14 (Win32)\n";
+            FoxResponse.date = "Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\n";
+            FoxResponse.content_type = "Content-Type: text/html\n";
+            FoxResponse.connection_type = "Connection: Closed\n";
+            FoxResponse.content = "\n<html><body><h1>Hello, Fox %i!</h1></body></html>";
+            strcat(FoxResponse.full_response,FoxResponse.version);
+            strcat(FoxResponse.full_response,FoxResponse.server_type);
+            strcat(FoxResponse.full_response,FoxResponse.date);
+            strcat(FoxResponse.full_response,FoxResponse.content_type);
+            strcat(FoxResponse.full_response,FoxResponse.connection_type);
+            strcat(FoxResponse.full_response,FoxResponse.content);
+
+            //sprintf(hello,"HTTP/1.1 200 OK GMT\nServer: Apache/2.2.14 (Win32)\nLast-Modified: Wed, 22 Jul 2009 19:15:56 GMT\nContent-Type: text/html\nConnection: Closed\n\n<html><body><h1>Hello, Fox %i!</h1></body></html>", numberOfConnections++);
+            sprintf(hello,FoxResponse.full_response, numberOfConnections++);
             printf("\nSending:\n%s\n", hello);
             send(AcceptSocket, hello, (int)strlen(hello), 0 );
         }
