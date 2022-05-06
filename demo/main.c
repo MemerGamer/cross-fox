@@ -125,12 +125,14 @@ int fox_launch_new(){
             FoxResponse.content = (char*) calloc(strlen("\n<html><body><h1>Hello, Fox %i!</h1></body></html>"),sizeof(char));
             memcpy(FoxResponse.content, "\n<html><body><h1>Hello, Fox %i!</h1></body></html>", strlen("\n<html><body><h1>Hello, Fox %i!</h1></body></html>") + 1);
 
+            //allocating memory for full response
             FoxResponse.full_response = (char*)calloc((
                     strlen(FoxResponse.version) + strlen(FoxResponse.server_type)+
                     strlen(FoxResponse.date) + strlen(FoxResponse.content_type) +
                     strlen(FoxResponse.connection_type) +
                     strlen(FoxResponse.content) + 1
                     ),sizeof(char));
+
             //creating full response string
             strcat(FoxResponse.full_response,FoxResponse.version);
             strcat(FoxResponse.full_response,FoxResponse.server_type);
