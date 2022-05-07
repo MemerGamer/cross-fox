@@ -2,7 +2,6 @@
 #include <string.h>
 #include "server.h"
 #include  <signal.h>
-#include <ctype.h>  //for whitespace removing
 
 //ideas
 // fox_settings settings = calloc(1, sizeof(fox_settings));
@@ -73,7 +72,6 @@ char* fox_readFromFile(char* filename){
     input_buffer[count] = '\0';
 
     //returning the final string
-    //printf("%s\n",input_buffer);
     return input_buffer;
 }
 
