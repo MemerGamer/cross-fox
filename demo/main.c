@@ -25,7 +25,6 @@ typedef struct html_response{
 
 void  INThandler(int sig){
     char  c;
-
     signal(sig, SIG_IGN);
     printf("Do you really want to quit? [y/n] ");
     c = getchar();
@@ -60,10 +59,9 @@ char* fox_readFromFile(char* filename){
     }
     fclose(fin);
     //whitespace removal
-
+    //----------------------
     // To keep track of non-space character count
     int count = 0;
-
     // Traverse the given string. If current character
     // is not space, then place it at index count
     for (int i = 0; input_buffer[i]; i++)
@@ -72,6 +70,7 @@ char* fox_readFromFile(char* filename){
     input_buffer[count] = '\0';
 
     //returning the final string
+    //----------------------
     return input_buffer;
 }
 
@@ -145,18 +144,23 @@ int fox_launch(){
             //setting up data about version
             FoxResponse.version = (char*) calloc(strlen("HTTP/1.1 200 OK GMT\n"),sizeof(char));
             memcpy(FoxResponse.version, "HTTP/1.1 200 OK GMT\n", strlen("HTTP/1.1 200 OK GMT\n") + 1);
+
             //setting up data about server type
             FoxResponse.server_type = (char*) calloc(strlen("Server: Apache/2.2.14 (Win32)\n"),sizeof(char));
             memcpy(FoxResponse.server_type, "Server: Apache/2.2.14 (Win32)\n", strlen("Server: Apache/2.2.14 (Win32)\n") + 1);
+
             //setting up data about date
             FoxResponse.date= (char*) calloc(strlen("Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\n"),sizeof(char));
             memcpy(FoxResponse.date, "Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\n", strlen("Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\n") + 1);
+
             //setting up data about content type
             FoxResponse.content_type = (char*) calloc(strlen("Content-Type: text/html\n"),sizeof(char));
             memcpy(FoxResponse.content_type, "Content-Type: text/html\n", strlen("Content-Type: text/html\n") + 1);
+
             //setting up data about connection type
             FoxResponse.connection_type = (char*) calloc(strlen("Connection: Closed\n"),sizeof(char));
             memcpy(FoxResponse.connection_type, "Connection: Closed\n", strlen("Connection: Closed\n") + 1);
+
             //setting up data about content
             char* contentFromInput = fox_readFromFile("../demo/src/index.html");
             FoxResponse.content = (char*) calloc(strlen(contentFromInput),sizeof(char));
