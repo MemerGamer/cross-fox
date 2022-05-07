@@ -162,7 +162,10 @@ int fox_launch(){
             memcpy(FoxResponse.connection_type, "Connection: Closed\n", strlen("Connection: Closed\n") + 1);
 
             //setting up data about content
-            char* contentFromInput = fox_readFromFile("../demo/src/index.html");
+            char* contentFromInput = (char*)calloc(3000,sizeof(char));
+            strcat(contentFromInput,"\n");  //IMPORTANT: it needs a separating \n
+            strcat(contentFromInput,fox_readFromFile("../demo/src/index.html"));
+
             FoxResponse.content = (char*) calloc(strlen(contentFromInput),sizeof(char));
             memcpy(FoxResponse.content, contentFromInput, strlen(contentFromInput) + 1);
 
