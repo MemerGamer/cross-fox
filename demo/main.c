@@ -2,6 +2,7 @@
 #include <string.h>
 #include "server.h"
 #include  <signal.h>
+#include <ctype.h>  //for whitespace removing
 
 //ideas
 // fox_settings settings = calloc(1, sizeof(fox_settings));
@@ -39,7 +40,44 @@ void  INThandler(int sig){
     getchar(); // Get new line character
 }
 
-int fox_launch_new(){
+char* fox_readFromFile(char* filename){
+    FILE* fin;
+    fin = fopen(filename, "r");
+    if (!fin) {
+        perror("File open Error!\n\n");
+        exit(EXIT_FAILURE);
+    }
+    char* line = (char*)calloc(200,sizeof(char));
+    char* input_buffer;
+    input_buffer = (char*)calloc(3000,sizeof(char));
+
+    while ((fscanf(fin, "%[^\n]", line))!= EOF)
+    {
+        fgetc(fin); // Reads in '\n' character and moves file
+        // stream past delimiting character
+        //printf("Line = %s \n", line);
+        strcat(input_buffer,line);
+        line = (char*)calloc(200,sizeof(char));     //emptying the buffer
+    }
+    fclose(fin);
+    //whitespace removal
+
+    // To keep track of non-space character count
+    int count = 0;
+
+    // Traverse the given string. If current character
+    // is not space, then place it at index count
+    for (int i = 0; input_buffer[i]; i++)
+        if (input_buffer[i] != ' ')
+            input_buffer[count++] = input_buffer[i]; // increment count
+    input_buffer[count] = '\0';
+
+    //returning the final string
+    //printf("%s\n",input_buffer);
+    return input_buffer;
+}
+
+int fox_launch(){
     // Initialize Winsock.
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -122,8 +160,9 @@ int fox_launch_new(){
             FoxResponse.connection_type = (char*) calloc(strlen("Connection: Closed\n"),sizeof(char));
             memcpy(FoxResponse.connection_type, "Connection: Closed\n", strlen("Connection: Closed\n") + 1);
             //setting up data about content
-            FoxResponse.content = (char*) calloc(strlen("\n<html><body><h1>Hello, Fox %i!</h1></body></html>"),sizeof(char));
-            memcpy(FoxResponse.content, "\n<html><body><h1>Hello, Fox %i!</h1></body></html>", strlen("\n<html><body><h1>Hello, Fox %i!</h1></body></html>") + 1);
+            char* contentFromInput = fox_readFromFile("../demo/src/index.html");
+            FoxResponse.content = (char*) calloc(strlen(contentFromInput),sizeof(char));
+            memcpy(FoxResponse.content, contentFromInput, strlen(contentFromInput) + 1);
 
             //allocating memory for full response
             FoxResponse.full_response = (char*)calloc((
@@ -151,5 +190,5 @@ int fox_launch_new(){
 
 
 int main() {
-    fox_launch_new();
+    fox_launch();
 }
