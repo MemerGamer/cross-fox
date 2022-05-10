@@ -45,9 +45,9 @@ char* fox_readFromFile(char* filename){
         perror("File open Error!\n\n");
         exit(EXIT_FAILURE);
     }
-    char* line = (char*)calloc(200,sizeof(char));
+    char* line = (char*)calloc(500,sizeof(char));
     char* input_buffer;
-    input_buffer = (char*)calloc(3000,sizeof(char));
+    input_buffer = (char*)calloc(20000,sizeof(char));
 
     while ((fscanf(fin, "%[^\n]", line))!= EOF)
     {
@@ -55,7 +55,7 @@ char* fox_readFromFile(char* filename){
         // stream past delimiting character
         //printf("Line = %s \n", line);
         strcat(input_buffer,line);
-        line = (char*)calloc(200,sizeof(char));     //emptying the buffer
+        line = (char*)calloc(500,sizeof(char));     //emptying the buffer
     }
     fclose(fin);
     //whitespace removal
@@ -64,10 +64,10 @@ char* fox_readFromFile(char* filename){
     int count = 0;
     // Traverse the given string. If current character
     // is not space, then place it at index count
-    for (int i = 0; input_buffer[i]; i++)
+    /*for (int i = 0; input_buffer[i]; i++)
         if (input_buffer[i] != ' ')
             input_buffer[count++] = input_buffer[i]; // increment count
-    input_buffer[count] = '\0';
+    input_buffer[count] = '\0';*/
 
     //returning the final string
     //----------------------
@@ -139,7 +139,7 @@ int fox_launch(){
             wprintf(L"Client connected.\n");
             char buffer[30001];
             recv(AcceptSocket,buffer,30000,0);
-            char hello[3000];
+            char hello[20000];
 
             //setting up data about version
             FoxResponse.version = (char*) calloc(strlen("HTTP/1.1 200 OK GMT\n"),sizeof(char));
@@ -162,7 +162,7 @@ int fox_launch(){
             memcpy(FoxResponse.connection_type, "Connection: Closed\n", strlen("Connection: Closed\n") + 1);
 
             //setting up data about content
-            char* contentFromInput = (char*)calloc(3000,sizeof(char));
+            char* contentFromInput = (char*)calloc(20000,sizeof(char));
             strcat(contentFromInput,"\n");  //IMPORTANT: it needs a separating \n
             strcat(contentFromInput,fox_readFromFile("../demo/src/index.html"));
 
